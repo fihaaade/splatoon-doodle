@@ -1,0 +1,76 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+  <meta name="theme-color" content="#f6f3e6">
+  <title>Splatoon Doodle — Ready, set, splat.</title>
+  <link rel="icon" href="favicon.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+<svg class="svg-defs" xmlns="http://www.w3.org/2000/svg"><defs><symbol id="squid" viewBox="0 0 100 110"><path d="M50 5C33 11 9 42 6 64L24 62 19 91 35 83 41 104 53 89 67 102 74 82 91 88 81 61 96 65C88 38 66 10 50 5Z" fill="currentColor" stroke="#29262b" stroke-width="4" stroke-linejoin="round"/><path d="M28 50Q50 38 73 50L68 75Q50 87 31 73Z" fill="#29262b"/><ellipse cx="40" cy="60" rx="8" ry="12" fill="#fffef0"/><ellipse cx="61" cy="60" rx="8" ry="12" fill="#fffef0"/><ellipse cx="43" cy="62" rx="3" ry="6" fill="#29262b"/><ellipse cx="58" cy="62" rx="3" ry="6" fill="#29262b"/><path d="M32 31 40 23" stroke="#fffef0" stroke-width="5" stroke-linecap="round"/></symbol><symbol id="star" viewBox="0 0 40 40"><path d="m20 1 4 13 13-6-8 13 10 8-15-1-5 11-3-14-14 1 11-9-7-11 12 7Z" fill="currentColor"/></symbol></defs></svg>
+
+<main class="arena first-person" id="arena" data-state="ready" aria-label="Splatoon Doodle game">
+  <canvas id="firstPersonCanvas" tabindex="-1" aria-label="First-person turf battle"></canvas>
+  <canvas id="game" class="hidden" width="1000" height="620" tabindex="-1" aria-label="Top-down turf battle"></canvas>
+  <div class="paper-grain" aria-hidden="true"></div>
+
+  <div class="game-hud game-only" aria-label="Match score">
+    <div class="team-label"><span class="team-dot"></span><span>YOUR TURF</span><strong id="yourScore">0.0%</strong></div>
+    <div class="timer-block"><span>TURF WAR</span><div class="timer" id="timer">1:00</div></div>
+    <div class="team-label rival"><span class="rival-dot"></span><span>RIVAL TURF</span><strong id="rivalScore">0.0%</strong></div>
+  </div>
+  <div id="crosshair" class="crosshair hidden" aria-hidden="true"><i></i><i></i><i></i><i></i><b></b></div>
+  <div id="lookHint" class="look-hint hidden">CLICK TO AIM · HOLD TO SPRAY</div>
+  <div class="ink-hud game-only hidden" id="inkHud"><div class="ink-caption"><span>INK</span><small id="inkStatus">HOLD SHIFT TO REFILL</small></div><div class="ink-meter"><i id="inkLevel"></i></div></div>
+  <div class="match-actions game-only"><button id="quickViewButton" aria-label="Switch perspective"><span>V</span> TOP DOWN</button><button class="pause-button hidden" id="pauseButton" aria-label="Pause and open game menu"><span>ESC</span> PAUSE</button></div>
+  <div class="touch-controls game-only hidden" id="touchControls"><div class="dpad"><button data-dir="w" aria-label="Move forward">↑</button><button data-dir="a" aria-label="Move left">←</button><button data-dir="s" aria-label="Move backward">↓</button><button data-dir="d" aria-label="Move right">→</button></div><div class="touch-actions"><button id="touchFire" aria-label="Hold to spray ink">SPLAT</button><button id="touchInk">REFILL</button></div></div>
+
+  <section class="menu-screen" id="startOverlay" role="dialog" aria-modal="true" aria-label="Game menu">
+    <div class="menu-panel" id="menuPanel" tabindex="-1">
+      <div class="little-tape" aria-hidden="true"></div>
+      <header class="menu-header">
+        <span class="eyebrow" id="menuEyebrow">A SKETCHBOOK TURF WAR</span>
+        <div class="title-lockup"><svg class="menu-squid squid-left" aria-hidden="true"><use href="#squid"/></svg><h1 id="menuTitle">SPLATOON<span>doodle<span class="title-dot">.</span></span></h1><svg class="menu-squid squid-right" aria-hidden="true"><use href="#squid"/></svg></div>
+        <p id="menuSubtitle">Small squids. Big ink energy.</p>
+      </header>
+      <nav class="menu-tabs" role="tablist" aria-label="Game menu sections">
+        <button role="tab" id="playNav" aria-controls="playPanel" aria-selected="true" class="active">PLAY</button>
+        <button role="tab" id="helpNav" aria-controls="helpPanel" aria-selected="false">HOW TO PLAY</button>
+        <button role="tab" id="bestNav" aria-controls="bestPanel" aria-selected="false">YOUR BEST <span>☆</span></button>
+      </nav>
+      <section id="playPanel" role="tabpanel" aria-labelledby="playNav">
+        <div class="launch-actions">
+          <button class="primary" id="startButton"><span>LET’S SPLAT <b>↗</b></span><small>SOLO PLAY · 60 SECONDS · MAX MESS</small></button>
+          <button class="primary hidden" id="resumeButton"><span>RESUME GAME <b>↗</b></span><small>YOUR TURF IS RIGHT WHERE YOU LEFT IT</small></button>
+        </div>
+        <div class="loadout" id="loadoutSettings">
+          <div class="ink-selection"><div class="setting-label"><span>01</span> YOUR INK</div><div class="color-options" role="group" aria-label="Choose your ink color"><button class="color-choice selected" data-color="purple" style="--swatch:#7952d6" aria-label="Purple ink" aria-pressed="true">✓</button><button class="color-choice" data-color="pink" style="--swatch:#ef779e" aria-label="Pink ink" aria-pressed="false"></button><button class="color-choice" data-color="blue" style="--swatch:#53b3d0" aria-label="Blue ink" aria-pressed="false"></button><button class="color-choice" data-color="orange" style="--swatch:#f39446" aria-label="Orange ink" aria-pressed="false"></button></div><span class="color-caption" id="colorName">GRAPE EXPECTATIONS</span></div>
+          <div class="weapon-selection"><div class="setting-label"><span>02</span> YOUR WEAPON</div>
+<div class="weapons" role="group" aria-label="Choose your weapon"><button class="weapon selected" data-weapon="shooter" aria-pressed="true"><svg viewBox="0 0 64 48"><path d="m9 17 26-3 5 6 16 1v9H35l-3 14H21l2-14-14-2Z" fill="#c2da7b"/><path d="M15 8h16v8H15Z" fill="#a388d8"/><path d="m9 17 26-3 5 6 16 1v9H35l-3 14H21l2-14-14-2ZM15 8h16v8H15m-7 8h11m22-5v11"/></svg><span><strong>Splattershot</strong><small>Classic spray. Fresh all day.</small></span><i>↗</i></button><button class="weapon" data-weapon="roller" aria-pressed="false"><svg viewBox="0 0 64 48"><path d="m5 9 39-5 3 17-39 5Z" fill="#a388d8"/><path d="m5 9 39-5 3 17-39 5ZM47 12l8-1 3 20-23 3 2 12m-6-5 10-1M13 9l2 14"/></svg><span><strong>Splat Roller</strong><small>Less aim. More coverage.</small></span><i>↗</i></button></div>
+
+          </div>
+        </div>
+        <div class="paused-loadout hidden" id="pausedLoadout"><span>TAKE A LITTLE BREATHER.</span><p>Your match is paused. Change your view or sound below.</p></div>
+        <div class="view-row"><span class="setting-label">PERSPECTIVE</span><div class="view-switch" role="group" aria-label="Camera perspective"><button id="firstPersonButton" class="selected" aria-pressed="true">◉ FIRST PERSON</button><button id="topDownButton" aria-pressed="false">▦ TOP DOWN</button></div><span class="switch-note"><kbd>V</kbd> ANYTIME</span></div>
+        <div class="controls-overview" id="controlsOverview"><div><span class="keys"><kbd>W</kbd><kbd>A</kbd><kbd>S</kbd><kbd>D</kbd></span><span>Move</span></div><div><kbd>MOUSE</kbd><span>Look & spray</span></div><div><kbd>SHIFT</kbd><span>Swim & refill</span></div><div><kbd>ESC</kbd><span>Pause</span></div></div>
+        <p class="camera-help" id="cameraHelp">Mouse to look. Click the field to capture your cursor.</p>
+        <div class="menu-options"><button class="sound" id="soundButton" aria-label="Enable sound" aria-pressed="false"><svg viewBox="0 0 24 24"><path d="M4 9h4l5-4v14l-5-4H4Z"/><path id="soundWaves" d="m17 9 5 6m0-6-5 6"/></svg><span>SOUND OFF</span><kbd>M</kbd></button><span class="pencil-note">no perfect lines. just good times.</span></div>
+        <button class="text-button hidden" id="backToMenuButton">END ROUND & CHANGE LOADOUT ↩</button>
+      </section>
+      <section id="helpPanel" class="hidden" role="tabpanel" aria-labelledby="helpNav">
+        <h2>MAKE YOUR MARK.</h2><p class="section-intro">Cover more ground than your rivals in 60 seconds.<br>Same turf. Two ways to play.</p>
+        <div class="how-to-grid"><article><span>01</span><h3>MOVE & MAKE A MESS</h3><p>WASD moves. Click the field to capture your cursor, move the mouse to look, and hold left click to spray. Q / E also turn the camera.</p></article><article><span>02</span><h3>CHANGE YOUR VIEW</h3><p>Press V to switch between first person and top down. Your position, ink and painted turf stay the same. In top down, aim with the cursor.</p></article><article><span>03</span><h3>SWIM. REFILL. REPEAT.</h3><p>Hold Shift to refill. Swim faster in your own ink. A roller paints a wide strip up close. Press Escape to pause and return to this menu.</p></article><article><span>04</span><h3>SMALL SCREEN, BIG SPLATS</h3><p>Use the directional pad to move. Swipe to look, hold SPLAT to paint, and hold REFILL to recover ink. Tap the view button to change cameras.</p></article></div>
+        <p class="fallback-note">Cursor capture unavailable? Drag to look and hold Space to spray.</p><button class="secondary menu-back">BACK TO PLAY ↗</button>
+      </section>
+      <section id="bestPanel" class="hidden" role="tabpanel" aria-labelledby="bestNav"><span class="pencil-note">your little wall of fame</span><h2>PERSONAL BEST.</h2><div class="best-number" id="bestValue">— <small>% TURF</small></div><p id="bestCaption">EVERY LEGEND STARTS WITH A SPLAT.</p><p id="bestDetail">Finish your first match to leave your mark here.</p><button class="secondary menu-back">BACK TO PLAY ↗</button></section>
+      <footer class="menu-footer"><span>FAN-MADE. INK-POWERED.</span><span>NOT AFFILIATED WITH NINTENDO.</span></footer>
+    </div>
+  </section>
+
+  <section class="menu-screen hidden" id="resultOverlay" role="dialog" aria-modal="true" aria-label="Match results" aria-live="polite"><div class="menu-panel result-panel" tabindex="-1"><div class="little-tape" aria-hidden="true"></div><svg class="result-squid" aria-hidden="true"><use href="#squid"/></svg><span class="pencil-note" id="resultNote">a beautiful mess!</span><h2 id="resultTitle">FRESH WIN!</h2><p id="resultText"></p><div class="result-number" id="resultScore"></div><span class="result-caption">OF THE YARD, COVERED IN YOU.</span><button class="primary" id="againButton"><span>ONE MORE SPLAT <b>↻</b></span><small>SAME LOADOUT · FRESH START</small></button><button class="text-button" id="resultMenuButton">CHANGE LOADOUT ↩</button></div></section>
+</main>
+<script type="module" src="game.js"></script>
+</body>
+</html>
